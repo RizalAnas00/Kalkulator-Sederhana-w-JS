@@ -1,0 +1,134 @@
+body {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    background-color: #697565;
+    color: #1E201E;
+    font-family: 'Roboto', sans-serif;
+    align-items: center;
+    justify-content: center;
+}
+
+#title {
+    margin-top: 0;
+    margin-bottom: 0;
+    font-size: 15px;
+    text-align: center;
+    padding-top: 20px;
+    color: #E7DFD5;
+}
+
+#calculator-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    width: 400px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    background-color: #1E201E;
+}
+
+#result-box {
+    display: flex;
+    font-size: 12px;
+    justify-content: flex-end;
+    align-items: flex-start;
+    color: #3B6978;
+    height: 120px;
+    width: 380px;
+    border-radius: 10px;
+    background-color: #E7DFD5;
+    text-align: right;
+    padding: 5px;
+    padding-right: 10px;
+    white-space: nowrap;
+    word-wrap: break-word;
+    overflow: hidden;
+}
+
+#result-box span {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Teks akan dipotong dengan ellipsis (...) jika terlalu panjang */
+    white-space: nowrap; /* Mencegah teks memecah ke baris baru */
+    width: 100%; /* Pastikan teks memenuhi seluruh lebar container */
+    font-size: inherit; /* Mengambil ukuran font dari #result-box */
+}
+
+//3C3D37 //84A9AC //E7DFD5
+#button-box {
+    
+}
+
+#math-box {
+    display: flex;
+    width: 380px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    background-color: #3B6978;
+    padding: 10px;
+}
+#operator-box {
+    display: grid;
+    width: 150px;
+    grid-gap: 5px;
+    grid-auto-rows: minmax(60px, auto);
+}
+
+#func-box {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between; 
+    width: 380px;
+    height: 50px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    background-color: #3B6978;
+    margin-bottom: 5px;
+    margin-top: 15px;
+    padding: 10px;
+}
+
+#func-box button{
+    flex: 1 1 0%;
+    margin: 2px;
+    border-radius: 5%;
+    padding: 10px; 
+    border: none; 
+    background-color: #E7DFD5; 
+    font-size: 30px;
+    font-family: 'Lucida Console', monospace;
+    cursor: pointer;
+}
+
+#button-box button:hover {
+    background-color: #1E201E; 
+    color: #E7DFD5;
+}
+
+#number-box {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 5px;
+    grid-auto-rows: minmax(60px, auto);
+    flex-wrap: wrap;
+    width: 900px;
+    padding-right: 5px;
+    justify-content: center;
+}
+
+#number-box button{
+    border-radius: 5%; 
+    border: none; 
+    background-color: #E7DFD5; 
+    font-size: 30px;
+    font-family: 'copperplate', fantasy;
+}
+
+#operator-box button{
+    border-radius: 5%; 
+    border: none;   
+    background-color: #E7DFD5; 
+}
