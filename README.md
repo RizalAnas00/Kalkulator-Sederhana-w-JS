@@ -6,7 +6,7 @@ Vanilla JS
 Vanilla CSS
 
 Operasi 1 operator, misal 1 + 2, 4 x 4 
-issue : perkalian lebih dari 1 operator belum bisa digunakan.
+support multi-operators on one-time-calculation
 
 part of Belajar JS 
 day One.
