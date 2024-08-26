@@ -1,106 +1,91 @@
-// Variabel untuk menyimpan kalkulasi saat ini
-let currentInput = '';
-let previousInput = '';
-let operator = '';
-let resultDisplayed = false;
+document.addEventListener("DOMContentLoaded", () => {
+    const resultDisplay = document.getElementById("result");
+    let expression = ""; // Store the expression string
 
-// Mendapatkan referensi elemen-elemen
-const resultElement = document.getElementById('result');
-const numberButtons = document.querySelectorAll('#number-box button');
-const operatorButtons = document.querySelectorAll('#operator-box button');
-const clearButton = document.getElementById('clear');
-const deleteButton = document.getElementById('delete');
-const equalButton = document.getElementById('equal');
+    // Number buttons
+    const numberButtons = document.querySelectorAll("#number-box button");
+    numberButtons.forEach(button => {
+        button.addEventListener("click", () => {
+            expression += button.textContent; // Add the clicked number to the expression
+            resultDisplay.textContent = expression;
+        });
+    });
 
-// Event listener untuk tombol angka
-numberButtons.forEach(button => {
-    button.addEventListener('click', () => {
-        if (resultDisplayed) {
-            currentInput = ''; // Hapus input jika hasil ditampilkan
-            resultDisplayed = false;
-        }
-        currentInput += button.innerText; // Tambahkan angka ke input
+    // Operator buttons
+    const operatorButtons = document.querySelectorAll("#operator-box button");
+    operatorButtons.forEach(button => {
+        button.addEventListener("click", () => {
+            expression += ` ${button.textContent} `; // Add operator with spaces around it
+            resultDisplay.textContent = expression;
+        });
+    });
 
-        // Perbarui tampilan hasil untuk menampilkan angka setelah operator
-        if (operator) {
-            resultElement.innerText = `${previousInput} ${operator} ${currentInput}`;
-        } else {
-            resultElement.innerText = currentInput;
+    // Clear button
+    document.getElementById("clear").addEventListener("click", () => {
+        expression = ""; // Clear the expression
+        resultDisplay.textContent = "Hasilnya"; // Reset the result display
+    });
+
+    // Delete button (removes last character)
+    document.getElementById("delete").addEventListener("click", () => {
+        expression = expression.trim().slice(0, -1); // Remove the last character
+        resultDisplay.textContent = expression || "Hasilnya"; // Update or reset display
+    });
+
+    // Equal button
+    document.getElementById("equal").addEventListener("click", () => {
+        if (expression) {
+            
+            let result = evalExp(expression); // Evaluate the expression
+            resultDisplay.textContent = result; // Show result
         }
     });
-});
 
-// Event listener untuk tombol operator
-operatorButtons.forEach(button => {
-    button.addEventListener('click', () => {
-        if (currentInput === '') return; // Abaikan jika tidak ada input
-        if (previousInput !== '') calculate(); // Hitung jika ada input sebelumnya
+    // Function to evaluate the expression
+    function evalExp(expression) {
+        let stackValue = [];
+        let stackOperators = [];
+        let importance = { "+": 1, "-": 1, "x": 2, "/": 2, "%": 3 };
 
-        operator = button.innerText; // Simpan operator yang dipilih
-        previousInput = currentInput; // Simpan input saat ini sebagai input sebelumnya
-        currentInput = ''; // Hapus input saat ini
+        // Split expression by spaces
+        let tokens = expression.match(/\d+|\+|\-|\x|\/|\%/g);
 
-        // Tampilkan operator dan input sebelumnya di tampilan hasil
-        resultElement.innerText = `${previousInput} ${operator}`;
-    });
-});
+        for (let token of tokens) {
+            if (!isNaN(token)) {
+                stackValue.push(Number(token));
+            } else if (token in importance) {
+                while (
+                    stackOperators.length > 0 &&
+                    importance[token] <= importance[stackOperators[stackOperators.length - 1]]
+                ) {
+                    let operator = stackOperators.pop();
+                    let value2 = stackValue.pop();
+                    let value1 = stackValue.pop();
+                    let result = applyOperator(operator, value1, value2);
+                    stackValue.push(result);
+                }
+                stackOperators.push(token);
+            }
+        }
 
-// Event listener untuk tombol sama dengan
-equalButton.addEventListener('click', () => {
-    if (previousInput === '' || currentInput === '') return; // Pastikan kedua input tersedia
-    calculate(); // Lakukan perhitungan
-    resultDisplayed = true; // Tandai bahwa hasil telah ditampilkan
-});
+        while (stackOperators.length > 0) {
+            let operator = stackOperators.pop();
+            let value2 = stackValue.pop();
+            let value1 = stackValue.pop();
+            let result = applyOperator(operator, value1, value2);
+            stackValue.push(result);
+        }
 
-// Event listener untuk tombol hapus
-clearButton.addEventListener('click', () => {
-    currentInput = '';
-    previousInput = '';
-    operator = '';
-    resultElement.innerText = '0'; // Reset tampilan
-});
-
-// Event listener untuk tombol hapus karakter terakhir
-deleteButton.addEventListener('click', () => {
-    currentInput = currentInput.slice(0, -1); // Hapus karakter terakhir
-
-    // Perbarui tampilan hasil jika ada operator, jika tidak tampilkan angka saat ini
-    if (operator) {
-        resultElement.innerText = `${previousInput} ${operator} ${currentInput || '0'}`;
-    } else {
-        resultElement.innerText = currentInput || '0';
-    }
-});
-
-// Fungsi untuk melakukan perhitungan
-function calculate() {
-    let result;
-    const prev = parseFloat(previousInput);
-    const curr = parseFloat(currentInput);
-
-    switch (operator) {
-        case '+':
-            result = prev + curr;
-            break;
-        case '-':
-            result = prev - curr;
-            break;
-        case 'x':
-            result = prev * curr;
-            break;
-        case '/':
-            result = curr === 0 ? 'Error' : prev / curr;
-            break;
-        case '%':
-            result = prev % curr;
-            break;
-        default:
-            return;
+        return stackValue.pop();
     }
 
-    // Tampilkan hasil dan simpan hasil sebagai input sebelumnya
-    resultElement.innerText = result;
-    previousInput = result.toString();
-    currentInput = ''; // Hapus input saat ini
-    operator = ''; // Hapus operator
-}
+    // Helper function to apply the operation
+    function applyOperator(operator, value1, value2) {
+        if (operator === "+") return value1 + value2;
+        if (operator === "-") return value1 - value2;
+        if (operator === "x") return value1 * value2;
+        if (operator === "/") return value1 / value2;
+        if (operator === "%") return value1 % value2;
+        throw "Unknown operator";
+    }
+});
